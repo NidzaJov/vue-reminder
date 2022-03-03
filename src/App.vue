@@ -51,6 +51,9 @@ export default {
   width: 600px;
   border: 4px solid @border-color;
   margin: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 
    .title {
      text-align: center;
