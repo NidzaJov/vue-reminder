@@ -1,11 +1,28 @@
 <template>
   <div class="single-task" @click="toggleDone">
       <input type="checkbox" v-model="task.done">
-      <span class="text" :class="spanClass">
+      <span
+        class="text"
+        :class="spanClass"
+        v-if="!editMode">
            {{task.text}}
       </span>
+      <input
+      type="text"
+      class="text"
+      v-model="editedText"
+      v-if="editMode"
+      @keyup.enter="saveEdit"
+      @click.stop>
       <my-button
-        class="delete"
+        :stop=true
+        v-show="!editMode"
+        @click="startEdit">Edit</my-button>
+      <my-button
+      :stop=true
+      v-show='editMode'
+      @click="cancelEdit">Cancel</my-button>
+      <my-button
         @click="handleDelete"
       >X</my-button>
   </div>
@@ -17,6 +34,12 @@ import MyButton from './MyButton.vue'
 export default {
   name: 'SingleTask',
   components: { MyButton },
+  data () {
+    return {
+      editMode: false,
+      editedText: ''
+    }
+  },
   props: {
     task: {
       type: Object
@@ -28,6 +51,19 @@ export default {
     },
     handleDelete () {
       this.$emit('delete', this.task.id)
+    },
+    startEdit () {
+      this.editMode = true
+      this.editedText = this.task.text
+    },
+    cancelEdit () {
+      this.editMode = false
+      this.editedText = ''
+    },
+    saveEdit () {
+      this.editMode = false
+      this.task.text = this.editedText
+      this.editedText = ''
     }
   },
   computed: {
