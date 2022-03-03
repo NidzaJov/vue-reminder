@@ -1,27 +1,22 @@
 <template>
   <div class="class-list">
       <SingleTask
-        v-for="todo in todos"
+        v-for="todo in filteredTodos"
         :key="todo.id"
         :task="todo"
-        @delete="deleteTask"
       />
   </div>
 </template>
 
 <script>
 import SingleTask from './SingleTask.vue'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'TaskList',
   components: { SingleTask },
-  props: {
-    todos: { type: Array }
-  },
-  methods: {
-    deleteTask (taskId) {
-      this.$emit('delete', taskId)
-    }
+  computed: {
+    ...mapGetters('todos', ['filteredTodos'])
   }
 }
 </script>

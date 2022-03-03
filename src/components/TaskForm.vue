@@ -18,9 +18,10 @@
         <input type="text"
         placeholder="Search..."
         class="todo-text search-text ps"
-        v-model="search.searchText">
+        v-model="searchText"
+        @keyup="changeInputHandler">
         <label class="filter">
-            <input type="checkbox" v-model="search.hideCompleted">
+            <input type="checkbox" v-model="hideCompleted" @change="changeInputHandler">
             Hide
         </label>
     </div>
@@ -28,27 +29,31 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
 import MyButton from './MyButton.vue'
 
 export default {
   name: 'TaskForm',
   components: { MyButton },
-  props: {
-    search: {
-      type: Object,
-      required: true
-    }
-  },
   data () {
     return {
       todoText: '',
-      showSearch: false
+      showSearch: false,
+      searchText: '',
+      hideCompleted: false
     }
   },
   methods: {
+    ...mapActions('todos', ['addTask', 'setSearchParams']),
     addHandler () {
-      this.$emit('add-todo', { text: this.todoText })
+      this.addTask(this.todoText)
       this.todoText = ''
+    },
+    changeInputHandler () {
+      this.setSearchParams({
+        searchText: this.searchText,
+        hideCompleted: this.hideCompleted
+      })
     }
   }
 }

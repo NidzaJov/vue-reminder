@@ -19,9 +19,9 @@
         v-show="!editMode"
         @click="startEdit">Edit</my-button>
       <my-button
-      :stop=true
-      v-show='editMode'
-      @click="cancelEdit">Cancel</my-button>
+        :stop=true
+        v-show='editMode'
+        @click="cancelEdit">Cancel</my-button>
       <my-button
         @click="handleDelete"
       >X</my-button>
@@ -29,6 +29,7 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
 import MyButton from './MyButton.vue'
 
 export default {
@@ -46,11 +47,12 @@ export default {
     }
   },
   methods: {
+    ...mapActions('todos', ['deleteTask']),
     toggleDone () {
       this.task.done = !this.task.done
     },
     handleDelete () {
-      this.$emit('delete', this.task.id)
+      this.deleteTask(this.task.id)
     },
     startEdit () {
       this.editMode = true
@@ -83,6 +85,9 @@ export default {
     cursor: pointer;
     display: flex;
     align-items: center;
+    &:hover {
+        background-color: #DDDDDD;
+    }
       .checkbox {
           margin-right: @padding-l
       }
