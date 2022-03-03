@@ -1,8 +1,8 @@
 <template>
   <div id="app">
      <h1 class="title">Vue Reminder App</h1>
-     <task-form @add-todo="addTodoHandler"></task-form>
-     <task-list :todos="todoData"/>
+     <task-form @add-todo="addTodoHandler" :search="searchParams"></task-form>
+     <task-list :todos="filteredTodos"/>
   </div>
 </template>
 
@@ -24,6 +24,10 @@ export default {
   },
   data () {
     return {
+      searchParams: {
+        searchText: '',
+        hideCompleted: false
+      },
       todoData: [
         { id: generateId(), text: 'Buy milk', done: false },
         { id: generateId(), text: 'Buy bread', done: false },
@@ -38,6 +42,25 @@ export default {
         id: generateId(), text: info.text, done: false
       }
       this.todoData.push(newTodo)
+    }
+  },
+  computed: {
+    filteredTodos () {
+      const searchedTodos = this.todoData
+        .filter(todo => {
+          const todoTextLowerCase = todo.text.toLowerCase()
+          const searchTextLowerCase = this.searchParams.searchText.toLowerCase()
+          const hasSearchText = todoTextLowerCase.indexOf(searchTextLowerCase) >= 0
+
+          return hasSearchText
+        })
+
+      if (this.searchParams.hideCompleted) {
+        const notCompleted = searchedTodos.filter(todo => !todo.done)
+        return notCompleted
+      } else {
+        return searchedTodos
+      }
     }
   }
 }
