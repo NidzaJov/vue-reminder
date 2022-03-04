@@ -7,18 +7,18 @@
     },
     {
       "id": 2,
-      "text": "Buy bread",
+      "text": "Buy some",
       "done": false
     },
     {
       "id": 3,
-      "text": "Walk pets",
+      "text": "walk the dog",
       "done": true
     },
     {
-      "id": 4,
       "text": "Test reminder",
-      "done": false
+      "done": false,
+      "id": 4
     }
   ]
 }

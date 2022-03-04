@@ -1,5 +1,5 @@
 <template>
-  <div class="single-task" @click="toggleDone">
+  <div class="single-task" @click="toggleDone" v-if="task">
       <input type="checkbox" v-model="task.done">
       <span
         class="text"
@@ -8,12 +8,12 @@
            {{task.text}}
       </span>
       <input
-      type="text"
-      class="text"
-      v-model="editedText"
-      v-if="editMode"
-      @keyup.enter="saveEdit"
-      @click.stop>
+        type="text"
+        class="text"
+        v-model="editedText"
+        v-if="editMode"
+        @keyup.enter="saveEdit"
+        @click.stop>
       <my-button
         :stop=true
         v-show="!editMode"
@@ -24,12 +24,13 @@
         @click="cancelEdit">Cancel</my-button>
       <my-button
         @click="handleDelete"
+        :stop="true"
       >X</my-button>
   </div>
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapActions, mapState } from 'vuex'
 import MyButton from './MyButton.vue'
 
 export default {
@@ -37,13 +38,13 @@ export default {
   components: { MyButton },
   data () {
     return {
-      editMode: false,
       editedText: ''
     }
   },
   props: {
-    task: {
-      type: Object
+    id: {
+      type: Number,
+      required: true
     }
   },
   methods: {
@@ -60,12 +61,9 @@ export default {
       this.deleteTask(this.task.id)
     },
     startEdit () {
-      this.editMode = true
       this.editedText = this.task.text
-    },
-    cancelEdit () {
-      this.editMode = false
-      this.editedText = ''
+      console.log(this.editedText)
+      this.$router.push({ name: 'EditTask', params: { id: this.task.id } })
     },
     saveEdit () {
       this.editTask({
@@ -73,18 +71,38 @@ export default {
         text: this.editedText,
         done: this.task.done
       })
-      this.editMode = false
-      this.editedText = ''
+      this.$router.push({ name: 'TaskList' })
+    },
+    cancelEdit () {
+      this.$router.push({ name: 'TaskList' })
     }
   },
   computed: {
+    ...mapState('todos', ['todoData']),
     spanClass () {
       return {
         'is-checked': this.task.done
       }
+    },
+    task () {
+      if (this.todoData) {
+        const foundTodo = this.todoData.find(t => t.id === this.id)
+        return foundTodo
+      }
+      return false
+    },
+    editMode () {
+      if (this.$route.name === 'EditTask') {
+        return true
+      } return false
     }
+  },
+
+  created () {
+    this.editedText = this.task.text
   }
 }
+
 </script>
 
 <style lang="less" scoped>

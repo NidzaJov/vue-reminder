@@ -1,30 +1,13 @@
 <template>
   <div id="app">
-     <div>
-      <h1 class="title">Vue Reminder App</h1>
-      <task-form></task-form>
-      <task-list />
-     </div>
+     <router-view></router-view>
   </div>
 </template>
 
 <script>
 
-import TaskList from './components/TaskList.vue'
-import TaskForm from './components/TaskForm.vue'
-import { mapActions } from 'vuex'
-
 export default {
-  name: 'App',
-  components: {
-    TaskList, TaskForm
-  },
-  created () {
-    this.getTasksAPI()
-  },
-  methods: {
-    ...mapActions('todos', ['getTasksAPI'])
-  }
+  name: 'App'
 }
 
 </script>
@@ -40,9 +23,6 @@ export default {
   flex-direction: column;
   align-items: center;
 
-   .title {
-     text-align: center;
-   }
 }
 
 </style>

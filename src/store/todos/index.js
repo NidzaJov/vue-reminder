@@ -48,7 +48,9 @@ export default {
         context.dispatch('getTasksAPI')
       }
     },
+
     async editTask (context, task) {
+      console.log('Edit task ', task)
       const response = await fetch(`${APIURL}/tasks/${task.id}`, {
         method: 'PUT',
         headers: {
